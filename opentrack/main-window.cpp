@@ -104,9 +104,22 @@ void main_window::init_dylibs()
     for (dylib_ptr& x : modules.protocols())
         ui.iconcomboProtocol->addItem(x->icon, x->name, x->module_name);
 
+//#ifndef UI_NO_FILTER_COMBOBOX
+//    for (dylib_ptr& x : modules.filters())
+//        ui.iconcomboFilter->addItem(x->icon, x->name, x->module_name);
+//#endif
+
 #ifndef UI_NO_FILTER_COMBOBOX
-    for (dylib_ptr& x : modules.filters())
-        ui.iconcomboFilter->addItem(x->icon, x->name, x->module_name);
+    #ifndef UI_FORCED_FILTER
+        for (dylib_ptr& x : modules.filters())
+            ui.iconcomboFilter->addItem(x->icon, x->name, x->module_name);
+    #else
+        for (dylib_ptr& x : modules.filters())
+        {
+            if (x->module_name == QString::fromStdString(UI_FORCED_FILTER))
+                ui.iconcomboFilter->addItem(x->icon, x->name, x->module_name);
+        }
+    #endif
 #endif
 
 #ifndef UI_NO_TRACKER_COMBOBOX
